@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.user.User;
 
 /**
  * TODO Sprint add-controllers.
@@ -13,11 +12,8 @@ import ru.practicum.shareit.user.User;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
-    private Long id;
+public class UpdateItemDto {
     private String name;
     private String description;
-    private boolean available;
-    private User owner;
-    private Long requestId;
+    private Boolean available;
 }

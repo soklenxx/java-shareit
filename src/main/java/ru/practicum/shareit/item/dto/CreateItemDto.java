@@ -13,11 +13,10 @@ import ru.practicum.shareit.user.User;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
-    private Long id;
+public class CreateItemDto {
     private String name;
     private String description;
-    private boolean available;
+    private Boolean available;
     private User owner;
     private Long requestId;
 }
