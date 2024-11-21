@@ -18,6 +18,6 @@ public class Booking {
     private LocalDate endDate;
     private Item item;
     private User booker;
-    private boolean IsBooked;
+    private boolean booked;
     private String reviews;
 }

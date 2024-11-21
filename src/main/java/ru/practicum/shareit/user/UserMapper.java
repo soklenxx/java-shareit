@@ -35,7 +35,7 @@ public class UserMapper {
         return User.builder()
                 .id(user.getId())
                 .name(updateUserDto.getName() != null ? updateUserDto.getName() : user.getName())
-                .email(updateUserDto.getEmail() != null ? updateUserDto.getEmail() : user.getEmail() )
+                .email(updateUserDto.getEmail() != null ? updateUserDto.getEmail() : user.getEmail())
                 .build();
     }
 
