@@ -23,7 +23,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItems(Long userId) {
         log.info("Request to get Items");
-        return items.values().stream().filter(i -> i.getOwner().getId() == userId).toList();
+        return items.values().stream().filter(i -> i.getOwner().getId().equals(userId)).toList();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
         log.info("Request to update User by id {}", item.getId());
         Item itemBD = getItemById(id);
         validation(item);
-        if (items.containsKey(id) & itemBD.getOwner().getId() == userId) {
+        if (items.containsKey(id) && itemBD.getOwner().getId().equals(userId)) {
             Item oldUser = items.get(id);
             oldUser.setName(item.getName());
             oldUser.setDescription(item.getDescription());

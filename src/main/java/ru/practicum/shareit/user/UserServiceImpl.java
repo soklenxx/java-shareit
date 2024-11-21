@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getEmail().contains("@")) {
             throw new ValidationException("Имейл должен содержать символ @");
         }
-        if (users.values().stream().filter(u -> u.getId() != user.getId()).map(User::getEmail).anyMatch(n -> n.equals(user.getEmail()))) {
+        if (users.values().stream().filter(u -> !u.getId().equals(user.getId())).map(User::getEmail).anyMatch(n -> n.equals(user.getEmail()))) {
             throw new RuntimeException("Имейл \"%s\" уже есть в системе".formatted(user.getEmail()));
         }
     }
