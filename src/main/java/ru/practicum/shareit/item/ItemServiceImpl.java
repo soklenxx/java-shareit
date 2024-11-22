@@ -29,7 +29,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item createItem(@RequestBody Item item, Long userId) {
         log.info("Request to create Item");
-        validation(item);
+        validate(item);
         item.setId(getNextId());
         User user = userService.getUserById(userId);
         item.setOwner(user);
@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
         }
         log.info("Request to update User by id {}", item.getId());
         Item itemBD = getItemById(id);
-        validation(item);
+        validate(item);
         if (items.containsKey(id) && itemBD.getOwner().getId().equals(userId)) {
             Item oldUser = items.get(id);
             oldUser.setName(item.getName());
@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
                                 i.getDescription().toUpperCase().contains(text.toUpperCase()))).toList();
     }
 
-    private void validation(Item item) {
+    private void validate(Item item) {
         if (item.getName() == null || item.getName().isBlank()) {
             log.error("Empty Item name");
             throw new ValidationException("Название товара должно быть указано");

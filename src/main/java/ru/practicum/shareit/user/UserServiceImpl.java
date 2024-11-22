@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         log.info("Request to create User by email {}", user.getEmail());
         // проверяем выполнение необходимых условий
-        validation(user);
+        validate(user);
         // формируем дополнительные данные
         user.setId(getNextId());
         // сохраняем новую публикацию в памяти приложения
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Id должен быть указан");
         }
         log.info("Request to update User by id {}", id);
-        validation(user);
+        validate(user);
         if (users.containsKey(id)) {
             User oldUser = users.get(id);
             oldUser.setName(user.getName());
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         throw new NotFoundException("Пользователь с id = " + id + " не найден");
     }
 
-    private void validation(User user) {
+    private void validate(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             log.error("Empty User email");
             throw new ValidationException("Имейл должен быть указан");
