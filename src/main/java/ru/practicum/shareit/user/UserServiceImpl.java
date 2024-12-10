@@ -1,24 +1,25 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.ValidationException;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
-@Component
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final Map<Long, User> users = new HashMap<>();
+    private final UserRepository userRepository;
 
     @Override
     public List<User> findAllUsers() {
         log.info("Request to get Users");
-        return users.values().stream().toList();
+        return userRepository.findAll();
     }
 
     @Override
@@ -27,43 +28,26 @@ public class UserServiceImpl implements UserService {
         // проверяем выполнение необходимых условий
         validate(user);
         // формируем дополнительные данные
-        user.setId(getNextId());
-        // сохраняем новую публикацию в памяти приложения
-        users.put(user.getId(), user);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public User updateUser(@RequestBody User user, Long id) {
-        // проверяем необходимые условия
-        if (id == null) {
-            log.error("Empty User id");
-            throw new ValidationException("Id должен быть указан");
-        }
-        log.info("Request to update User by id {}", id);
         validate(user);
-        if (users.containsKey(id)) {
-            User oldUser = users.get(id);
-            oldUser.setName(user.getName());
-            oldUser.setEmail(user.getEmail());
-            return oldUser;
-        }
-        throw new NotFoundException("Пользователь с id = " + id + " не найден");
+        return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long id) {
         getUserById(id);
-        users.remove(id);
+        userRepository.deleteById(id);
         log.info("Request to delete User by id {}", id);
     }
 
     @Override
     public User getUserById(Long id) {
-        if (users.containsKey(id)) {
-            return users.get(id);
-        }
-        throw new NotFoundException("Пользователь с id = " + id + " не найден");
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + id + " не найден"));
     }
 
     private void validate(User user) {
@@ -74,17 +58,9 @@ public class UserServiceImpl implements UserService {
         if (!user.getEmail().contains("@")) {
             throw new ValidationException("Имейл должен содержать символ @");
         }
-        if (users.values().stream().filter(u -> !u.getId().equals(user.getId())).map(User::getEmail).anyMatch(n -> n.equals(user.getEmail()))) {
+        Optional<User> userBd = userRepository.findByEmail(user.getEmail());
+        if (userBd.isPresent() && !userBd.get().getId().equals(user.getId())) {
             throw new RuntimeException("Имейл \"%s\" уже есть в системе".formatted(user.getEmail()));
         }
-    }
-
-    private Long getNextId() {
-        Long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
     }
 }
