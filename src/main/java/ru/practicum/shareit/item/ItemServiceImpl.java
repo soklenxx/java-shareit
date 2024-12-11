@@ -84,7 +84,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Comment> getComments(Long id){
+    public List<Comment> getComments(Long id) {
         Item item = getItemById(id);
         return commentsRepository.findByItem(item);
     }

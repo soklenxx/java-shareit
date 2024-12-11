@@ -14,6 +14,7 @@ import java.util.List;
 public class BookingMapper {
     private final ItemMapper itemMapper;
     private final UserMapper userMapper;
+
     public BookingDto toBookingDto(Booking booking) {
         return BookingDto.builder()
                 .id(booking.getId())
