@@ -17,6 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                 where b.id = :id and (b.booker = :user or b.item.owner = :user)
             """)
     Optional<Booking> findByIdAndBookerOrItemOwner(Long id, User user);
+
     @Query(
             value = """
                 SELECT b
@@ -26,8 +27,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                 limit 1
             """)
     Optional<Booking> findBookingByBookerAndItemAndStatus(User user, Item item, BookingStatus status, LocalDateTime dateTime);
+
     List<Booking> findBookingByBookerAndStatus(User user, BookingStatus status);
+
     List<Booking> findBookingByBooker(User user);
+
     @Query(
             value = """
                 SELECT b
