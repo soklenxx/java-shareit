@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16.1
+    container_name: springboot-postgresql
     ports:
       - "5432:5432"
     volumes:
