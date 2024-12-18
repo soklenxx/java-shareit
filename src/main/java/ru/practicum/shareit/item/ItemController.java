@@ -19,6 +19,8 @@ import ru.practicum.shareit.item.dto.CreateItemDto;
 import ru.practicum.shareit.item.dto.ItemDateBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.UpdateItemDto;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class ItemController {
     private final ItemService itemService;
     private final ItemMapper itemMapper;
     private final CommentMapper commentMapper;
+    private final ItemRequestRepository itemRequestRepository;
 
     @GetMapping
     public ResponseEntity<List<ItemDto>> getItems(@RequestHeader(USER_ID) Long userId) {
@@ -47,6 +50,8 @@ public class ItemController {
     public ResponseEntity<ItemDto> createItem(@RequestBody CreateItemDto createItemDto,
                                               @RequestHeader(USER_ID) Long userId) {
         Item item = itemMapper.toEntity(createItemDto);
+        ItemRequest request = itemRequestRepository.findById(createItemDto.getRequestId()).orElse(null);
+        item.setRequest(request);
         return ResponseEntity.ok(itemMapper.toItemDto(itemService.createItem(item, userId)));
     }
 

@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @Data
@@ -25,4 +27,5 @@ public class ItemRequest {
     private String description;
     @ManyToOne
     private User requestor;
+    private LocalDateTime created;
 }

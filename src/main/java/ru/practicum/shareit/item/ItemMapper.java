@@ -26,6 +26,7 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .owner(userMapper.toUserDto(item.getOwner()))
                 .comments(commentMapper.toCommentDto(itemService.getComments(item.getId())))
+                .requestId(item.getRequest().getId())
                 .build();
     }
 
