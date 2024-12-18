@@ -11,11 +11,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.comments.Comment;
+import ru.practicum.shareit.comments.CommentMapper;
+import ru.practicum.shareit.comments.dto.CommentDto;
+import ru.practicum.shareit.comments.dto.CreateCommentDto;
 import ru.practicum.shareit.item.dto.CreateItemDto;
+import ru.practicum.shareit.item.dto.ItemDateBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.UpdateItemDto;
 
 import java.util.List;
+
+import static ru.practicum.shareit.Constants.USER_ID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,27 +31,28 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ItemMapper itemMapper;
+    private final CommentMapper commentMapper;
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemDto>> getItems(@RequestHeader(USER_ID) Long userId) {
         return ResponseEntity.ok(itemMapper.toItemDto(itemService.getItems(userId)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(itemMapper.toItemDto(itemService.getItemById(id)));
+    public ResponseEntity<ItemDateBookingDto> getItemById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(itemMapper.toItemDateBookingDto(itemService.getItemById(id)));
     }
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@RequestBody CreateItemDto createItemDto,
-                                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                              @RequestHeader(USER_ID) Long userId) {
         Item item = itemMapper.toEntity(createItemDto);
         return ResponseEntity.ok(itemMapper.toItemDto(itemService.createItem(item, userId)));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ItemDto> updateItem(@PathVariable("id") Long id,
-                                              @RequestHeader("X-Sharer-User-Id") Long userId,
+                                              @RequestHeader(USER_ID) Long userId,
                                               @RequestBody UpdateItemDto updateItemDto) {
         Item item = itemMapper.updateEntity(updateItemDto, id);
         return ResponseEntity.ok(itemMapper.toItemDto(itemService.updateItem(id, userId, item)));
@@ -53,5 +61,13 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<List<ItemDto>> getItemsByText(@RequestParam(required = false) String text) {
         return ResponseEntity.ok(itemMapper.toItemDto(itemService.getItemsByText(text)));
+    }
+
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<CommentDto> createComment(@PathVariable("id") Long id,
+                                                    @RequestBody CreateCommentDto createCommentDto,
+                                                    @RequestHeader(USER_ID) Long userId) {
+        Comment comment = commentMapper.toEntity(createCommentDto);
+        return ResponseEntity.ok(commentMapper.toCommentDto(itemService.createComment(comment, id, userId)));
     }
 }
