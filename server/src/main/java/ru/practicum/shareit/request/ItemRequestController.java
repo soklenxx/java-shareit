@@ -22,6 +22,7 @@ import static ru.practicum.shareit.Constants.USER_ID;
 public class ItemRequestController {
     private final ItemRequestService itemRequestService;
     private final ItemRequestMapper itemRequestMapper;
+
     @GetMapping
     public ResponseEntity<List<ItemRequestDto>> getRequests(@RequestHeader(USER_ID) Long userId) {
         return ResponseEntity.ok(itemRequestMapper.toItemRequestDto(itemRequestService.getRequests(userId)));
