@@ -91,6 +91,7 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemByRequestId(Long requestId) {
         return itemRepository.findByRequestId(requestId);
     }
+
     @Override
     public LocalDateTime findLastBookingByItem(Item item) {
         return bookingRepository.findLastBookingByItem(item, LocalDateTime.now(), BookingStatus.WAITING).orElse(null);
